@@ -1,6 +1,8 @@
 import sys
 import struct
 
+#theres no good way to know how large the file header is
+#but this should work unless there are a lot of extra chunks
 WAV_HEADER_SIZE = 2000
 
 #from aplay/formats.h
@@ -10,6 +12,7 @@ WAV_HEADER_SIZE = 2000
 #define WAV_FMT_DOLBY_AC3_SPDIF 0x0092
 #define WAV_FMT_EXTENSIBLE 0xfffe
 '''
+
 PCM = 0x0001
 IEEE_FLOAT = 0x0003
 DOLBY_AC3_SPDIF = 0x0092
@@ -106,50 +109,3 @@ while chunk_header != "data":
 	chunk_size = struct.unpack("i", header[index+4:index+8])[0]
 	print("chunk "+chunk_header+" length: "+str(chunk_size))
 	index += 8 +chunk_size
-'''
-list_ = header[60:64].decode('ascii')
-print(list_)
-
-next_header = struct.unpack("i", header[64:68])[0]
-print("list len: "+str(next_header))
-
-head_ = header[68+next_header:68+next_header+4].decode('ascii')
-print(head_)
-
-data_length = struct.unpack("i", header[68+next_header+4:68+next_header+8])[0]
-print("data length: "+str(data_length))	
-'''
-
-'''	
-is_data_chunk = False
-index = 16 + fmt_data_length + extra_param_size
-while not is_data_chunk:
-	chunk_header = header[index:index+4].decode('ascii')
-	print("chunk header: "+chunk_header)
-
-	chunk_length = struct.unpack("H", header[index+4:index+6])[0]
-
-	if chunk_header == "data":
-		is_data_chunk = True
-		print("data size: "+str(chunk_length))
-	else:
-		print("chunk size: "+str(chunk_length))
-
-	index = index + 4 + chunk_length
-
-'''
-
-
-'''	
-data_start = 16+fmt_data_length+extra_param_size#36+extra_param_size
-data = header[data_start:data_start+4].decode('ascii')
-print("data header: "+data)
-
-data_size = struct.unpack("i", header[data_start+4:data_start+8])[0]
-print("data size: "+str(data_size))
-'''
-
-	
-
-
-
